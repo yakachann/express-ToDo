@@ -1,0 +1,20 @@
+#list{
+  width: 200px;
+  text-align: left;
+}
+
+.task{
+  display: flex; 
+  flex-direction: row;
+}
+
+.p{
+  height: 20px; 
+  padding: 0;
+  margin: 0;
+  width: 200px;
+}
+
+.button{
+  height: 20px;
+}

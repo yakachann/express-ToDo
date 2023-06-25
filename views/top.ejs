@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewpoint" content="width=device-width" initial-scale="1.0" />
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <title>ToDo管理</title>
+</head>
+
+<body>
+  <h1>ToDo管理</h1>
+  <form method="post">
+    <input type="text" name="addTask">
+    <button type="submit">add task</button>
+  </form>
+
+  <table>
+    <tr>
+      <th id="number">No.</th>
+      <th id="list">ToDo List</th>
+    </tr>
+
+    <%for (let i=0; i < contents.length; i++){ %>
+      <tr>
+        <td>
+          <p>
+            <%=i + 1%>
+          </p>
+        </td>
+        <td id="task<%=contents[i].id%>">
+          <form action="/api/contents/update/<%=contents[i].id%>" method="post" class="task" id="form<%=contents[i].id%>">
+            <p id="p<%=contents[i].id%>" class="p">
+              <%=contents[i].content %>
+            </p>
+            <button id="button<%=contents[i].id%>" onclick="edit('<%=contents[i].id%>')" class="button" type="button">edit</button>
+          </form>
+        </td>
+        <input type="hidden" value="<%=contents[i].content %>" id="hiddenData<%=contents[i].id%>">
+        <td>
+          <form action="/api/contents/<%=contents[i].id%>" method="post">
+            <button id="<%=contents[i].id%>" type="submit" class="button">×</button>
+          </form>
+        </td>
+      </tr>
+      <% } %>
+
+  </table>
+  <script>
+    function edit(id) {
+      const p = document.querySelector("#p" + id);
+      const button = document.querySelector("#button" + id);
+      const cancel = document.createElement("button");
+      const input = document.createElement("input");
+      const form = document.querySelector("#form" + id);
+      form.removeChild(p);
+      form.prepend(input);
+      input.setAttribute("type", "text");
+      input.setAttribute("id", `in${id}`);
+      input.setAttribute("name", "editTask");
+      button.setAttribute("onclick", `comp(${id})`);
+      cancel.setAttribute("id", `cancel${id}`);
+      cancel.setAttribute("type", "button");
+      cancel.setAttribute("onclick", `cancel(${id})`);
+      cancel.textContent="cancel";
+      input.value = p.textContent.trim();
+      console.log(p.textContent.length);
+      button.textContent = "complete";
+      form.appendChild(cancel);
+      
+    }
+
+    function comp(id){
+      const button = document.querySelector("#button" + id);
+      button.setAttribute("type", "submit");
+    }
+
+    function cancel(id) {
+      const input = document.querySelector("#in" + id);
+      const button = document.querySelector("#button" + id);
+      const cancel = document.querySelector("#cancel" + id);
+      const p = document.createElement("p");
+      const form = document.querySelector("#form" + id);
+      const data = document.querySelector("#hiddenData"  + id);
+      form.prepend(p);
+      form.append(button);
+      form.removeChild(input);
+      form.removeChild(cancel);
+      p.setAttribute("id", `p${id}`);
+      p.setAttribute("class", "p");
+      p.textContent=data.value;
+      button.setAttribute("id", `button${id}`);
+      button.setAttribute("onclick", `edit(${id})`);
+      button.setAttribute("class", "button");
+      button.setAttribute("type", "button");
+      button.textContent="edit";
+    }
+
+  </script>
+</body>
+
+</html>
